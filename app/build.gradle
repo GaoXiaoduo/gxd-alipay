@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        applicationId "com.gxd.alipay"
+        minSdkVersion 18
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+
+        Properties localProps = new Properties()
+        localProps.load(new FileInputStream(file('../gxd-sign/gxd-sign.properties')))
+
+        debug {
+            // 使用assert确保存在该属性否则报错，避免错误打包
+            assert localProps['sign-debug-name']
+
+            keyAlias localProps["aliasDebug"]
+            keyPassword localProps["passDebug"]
+            storeFile file(localProps["storeDebug"])
+            storePassword localProps["storePassDebug"]
+        }
+
+        release {
+            // 使用assert确保存在该属性否则报错，避免错误打包
+            assert localProps['sign-name']
+
+            keyAlias localProps["alias"]
+            keyPassword localProps["pass"]
+            storeFile file(localProps["store"])
+            storePassword localProps["storePass"]
+        }
+    }
+
+    buildTypes {
+
+        debug {
+            // 是否进行混淆
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    // implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // 支付宝 SDK AAR 包所需的配置
+    implementation(name: 'alipaySdk-15.6.8-20191021122514', ext: 'aar')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.core:core-ktx:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
