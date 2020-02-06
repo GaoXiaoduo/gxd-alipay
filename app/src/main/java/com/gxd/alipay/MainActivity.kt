@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.alipay.sdk.app.PayTask
 import com.gxd.alipay.util.OrderInfoUtil2_0
 
+
 class MainActivity : AppCompatActivity()
 {
 
@@ -23,7 +26,70 @@ class MainActivity : AppCompatActivity()
         setContentView(R.layout.activity_main)
     }
 
+    /**
+     * 调起高德地图
+     * @param v View
+     */
+    fun openMapApp(v: View)
+    {
+        //test1()
+        test2()
+    }
 
+    fun openMapWeb(v: View)
+    {
+        test3()
+    }
+
+    fun test1()
+    {
+        val gdLatitude = 39.92848272
+        val gdLongitude = 116.39560823
+        //var uri = Uri.parse("androidamap://route?sourceApplication=appName&slat=&slon=&sname=我的位置&dlat=" + mEndPoint.getLatitude().toString() + "&dlon=" + mEndPoint.getLongitude().toString() + "&dname=目的地&dev=0&t=2")
+        var uri = Uri.parse("androidamap://route?sourceApplication=appName&slat=&slon=&sname=我的位置&dlat=" + gdLatitude + "&dlon=" + gdLongitude + "&dname=目的地&dev=0&t=2")
+
+        var naviIntent = Intent("android.intent.action.VIEW", uri)
+        this.startActivity(naviIntent)
+
+    }
+
+    fun test2()
+    {
+        //        高德文档链接：https://lbs.amap.com/api/amap-mobile/guide/android/route
+        //        act=android.intent.action.VIEW
+        //        cat=android.intent.category.DEFAULT
+        //        dat=amapuri://route/plan/?sid=&slat=39.92848272&slon=116.39560823&sname=A&did=&dlat=39.98848272&dlon=116.47560823&dname=B&dev=0&t=0
+        //        pkg=com.autonavi.minimap
+        val gdLatitude = 39.92848272
+        val gdLongitude = 116.39560823
+        val uri = String.format("amapuri://route/plan/?dlat=%s&dlon=%s&dname=目的地&dev=0&t=3",
+                gdLatitude, gdLongitude)
+        val intent = Intent()
+        intent.action = "android.intent.action.VIEW"
+        intent.addCategory("android.intent.category.DEFAULT")
+        intent.data = Uri.parse(uri)
+        intent.setPackage("com.autonavi.minimap")
+        startActivity(intent)
+    }
+
+    fun test3()
+    {
+        //val uri = "https://m.amap.com/navi/?start=116.403124,39.940693&dest=116.481488,39.990464&destName=阜通西&naviBy=car&key=0e24778d0e9a45c98d71d82f7629ed4b"
+        val gdLatitude = 39.92848272
+        val gdLongitude = 116.39560823
+        val uri = "https://m.amap.com/navi/?dest=116.39560823,39.92848272&destName=阜通西&naviBy=walk&key=0e24778d0e9a45c98d71d82f7629ed4b"
+        val intent = Intent()
+        intent.action = "android.intent.action.VIEW"
+        intent.addCategory("android.intent.category.DEFAULT")
+        intent.data = Uri.parse(uri)
+        //intent.setPackage("com.autonavi.minimap")
+        startActivity(intent)
+    }
+
+    /**
+     * 调起支付宝
+     * @param v View
+     */
     fun payV2(v: View)
     {
         if (TextUtils.isEmpty(APPID) || TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))
