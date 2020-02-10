@@ -41,6 +41,11 @@ class MainActivity : AppCompatActivity()
         test3()
     }
 
+    fun openAllMap(v: View)
+    {
+        test4()
+    }
+
     fun test1()
     {
         val gdLatitude = 39.92848272
@@ -84,6 +89,29 @@ class MainActivity : AppCompatActivity()
         intent.data = Uri.parse(uri)
         //intent.setPackage("com.autonavi.minimap")
         startActivity(intent)
+    }
+
+    fun test4()
+    {
+        navigation(39.940409, 116.355257, 18, "西直街")
+    }
+
+    fun navigation(latitude: Double, longitude: Double, zoom: Int, addr: String)
+    {
+        var sb = StringBuffer()
+        sb.append("geo:")
+                .append(latitude)
+                .append(",")
+                .append(longitude)
+                .append("?")
+                .append("z=")
+                .append(zoom)
+                .append("?")
+                .append("q=")
+                .append(addr)
+        var uri = Uri.parse(sb.toString())
+        var mIntent = Intent(Intent.ACTION_VIEW, uri)
+        startActivity(mIntent)
     }
 
     /**
